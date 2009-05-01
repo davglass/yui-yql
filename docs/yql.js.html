@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>API: yql   yql.js  (YUI Library)</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css" />
+
+    <script type="text/javascript" src="assets/api-js"></script>
+    <script type="text/javascript" src="assets/ac-js"></script>
+</head>
+
+<body id="yahoo-com">
+
+<div id="doc3" class="yui-t2">
+	<div id="hd">
+        <h1><a href="http://developer.yahoo.com/yui/" title="Yahoo! UI Library">Yahoo! UI Library</a></h1>
+        <h3>yql&nbsp; <span class="subtitle">0.0.1</span></h3>
+        <a href="./index.html" title="Yahoo! UI Library">Yahoo! UI Library</a> 
+            &gt; <a href="./module_yql.html" title="yql">yql</a>
+                
+                 &gt; yql.js (source view) 
+        <form onsubmit="return false">
+            <div id="propertysearch">
+                Search: <input autocomplete="off" id="searchinput" />
+                <div id="searchresults">
+                    &nbsp;
+                </div>
+            </div>
+        </form>
+	</div>
+
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+            <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
+                <fieldset>
+                    <legend>Filters</legend>
+                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                </fieldset>
+            </form>
+
+                    <div id="srcout">
+                        <style>
+                            #doc3 .classopts { display:none; }
+                        </style>
+<div class="highlight"><pre><span class="nx">YUI</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">&#39;yql&#39;</span><span class="o">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c">//Global storage for the callbacks</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">YUI</span><span class="p">.</span><span class="nx">yql</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">YUI</span><span class="p">.</span><span class="nx">yql</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="p">}</span>
+    <span class="c">/**</span>
+<span class="c">     * This class adds a sugar class to allow access to YQL (http://developer.yahoo.com/yql/).</span>
+<span class="c">     * @module yql</span>
+<span class="c">     */</span>     
+    <span class="c">/**</span>
+<span class="c">     * This class adds a sugar class to allow access to YQL (http://developer.yahoo.com/yql/).</span>
+<span class="c">     * @class yql</span>
+<span class="c">     * @extends Event.Target</span>
+<span class="c">     * @constructor</span>
+<span class="c">     * @param {String} sql The SQL statement to execute</span>
+<span class="c">     * @param {Function} callback The callback to execute after the query (optional).</span>
+<span class="c">     * @param {Object} params An object literal of extra parameters to pass along (optional).</span>
+<span class="c">     */</span>
+    <span class="kd">var</span> <span class="nx">BASE_URL</span> <span class="o">=</span> <span class="s1">&#39;http:/&#39;</span><span class="o">+</span><span class="s1">&#39;/query.yahooapis.com/v1/public/yql?&#39;</span><span class="o">,</span>
+    <span class="nx">yql</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">sql</span><span class="o">,</span> <span class="nx">callback</span><span class="o">,</span> <span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">yql</span><span class="p">.</span><span class="nx">superclass</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_query</span><span class="p">(</span><span class="nx">sql</span><span class="o">,</span> <span class="nx">callback</span><span class="o">,</span> <span class="nx">params</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="nx">Y</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">yql</span><span class="o">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Event</span><span class="p">.</span><span class="nx">Target</span><span class="o">,</span> <span class="p">{</span>
+        <span class="c">/**</span>
+<span class="c">        * @private</span>
+<span class="c">        * @method _receiver</span>
+<span class="c">        * @description The global callback that get&#39;s called from Get.</span>
+<span class="c">        * @param {Object} q The JSON object from YQL.</span>
+<span class="c">        * @return Self</span>
+<span class="c">        */</span>
+        <span class="nx">_receiver</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">q</span><span class="p">.</span><span class="nx">query</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="o">,</span> <span class="nx">q</span><span class="p">.</span><span class="nx">query</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">q</span><span class="p">.</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="o">,</span> <span class="nx">q</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_cb</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_cb</span><span class="p">(</span><span class="nx">q</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+        <span class="p">}</span><span class="o">,</span>
+        <span class="c">/**</span>
+<span class="c">        * @private</span>
+<span class="c">        * @method _query</span>
+<span class="c">        * @description Builds the query and fire the Get call.</span>
+<span class="c">        * @param {String} sql The SQL statement to execute</span>
+<span class="c">        * @param {Function} callback The callback to execute after the query (optional).</span>
+<span class="c">        * @param {Object} params An object literal of extra parameters to pass along (optional).</span>
+<span class="c">        * @return Self</span>
+<span class="c">        */</span>
+        <span class="nx">_query</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">sql</span><span class="o">,</span> <span class="nx">callback</span><span class="o">,</span> <span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">st</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">stamp</span><span class="p">({})</span><span class="o">,</span> <span class="nx">qs</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nx">url</span><span class="o">;</span>
+            <span class="c">//Must replace the dashes with underscrores</span>
+            <span class="nx">st</span> <span class="o">=</span> <span class="nx">st</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/-/g</span><span class="o">,</span> <span class="s1">&#39;_&#39;</span><span class="p">);</span>
+            
+            <span class="k">this</span><span class="p">.</span><span class="nx">_cb</span> <span class="o">=</span> <span class="nx">callback</span><span class="o">;</span>
+
+            <span class="nx">YUI</span><span class="p">.</span><span class="nx">yql</span><span class="p">[</span><span class="nx">st</span><span class="p">]</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_receiver</span><span class="o">,</span> <span class="k">this</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">params</span> <span class="o">=</span> <span class="p">{};</span>
+            <span class="p">}</span>
+            <span class="nx">params</span><span class="p">.</span><span class="nx">q</span> <span class="o">=</span> <span class="nx">sql</span><span class="o">;</span>
+            <span class="nx">params</span><span class="p">.</span><span class="nx">format</span> <span class="o">=</span> <span class="s1">&#39;json&#39;</span><span class="o">;</span>
+            <span class="nx">params</span><span class="p">.</span><span class="nx">callback</span> <span class="o">=</span> <span class="s2">&quot;YUI.yql.&quot;</span> <span class="o">+</span> <span class="nx">st</span><span class="o">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">params</span><span class="p">.</span><span class="nx">env</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">params</span><span class="p">.</span><span class="nx">env</span> <span class="o">=</span> <span class="s1">&#39;http:/&#39;</span><span class="o">+</span><span class="s1">&#39;/datatables.org/alltables.env&#39;</span><span class="o">;</span>
+            <span class="p">}</span>
+
+            <span class="nx">Y</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">params</span><span class="o">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">v</span><span class="o">,</span> <span class="nx">k</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">qs</span> <span class="o">+=</span> <span class="nx">k</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&amp;&#39;</span><span class="o">;</span>
+            <span class="p">});</span>
+
+            <span class="nx">url</span> <span class="o">=</span> <span class="nx">BASE_URL</span> <span class="o">+</span> <span class="nx">qs</span><span class="o">;</span>
+            <span class="nx">Y</span><span class="p">.</span><span class="nx">Get</span><span class="p">.</span><span class="nx">script</span><span class="p">(</span><span class="nx">url</span><span class="o">,</span> <span class="p">{</span> <span class="nx">autopurge</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="c">/**</span>
+<span class="c">    * @event query</span>
+<span class="c">    * @description Fires when the Query returns.</span>
+<span class="c">    * @type {Event.Custom}</span>
+<span class="c">    */</span>
+
+    <span class="c">/**</span>
+<span class="c">    * @event error</span>
+<span class="c">    * @description Fires when an error occurs.</span>
+<span class="c">    * @type {Event.Custom}</span>
+<span class="c">    */</span>
+
+    <span class="nx">Y</span><span class="p">.</span><span class="nx">yql</span> <span class="o">=</span> <span class="nx">yql</span><span class="o">;</span>
+
+<span class="p">}</span><span class="o">,</span> <span class="s1">&#39;1.0&#39;</span><span class="o">,</span> <span class="p">{</span> <span class="nx">requires</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;get&#39;</span><span class="o">,</span> <span class="s1">&#39;event-custom&#39;</span><span class="p">]</span><span class="o">,</span> <span class="nx">skinnable</span><span class="o">:</span><span class="kc">false</span><span class="p">});</span>
+</pre></div>
+                    </div>
+			</div>
+		</div>
+		<div class="yui-b">
+            <div class="nav">
+
+                    <div id="moduleList" class="module">
+                        <h4>Modules</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="module_yql.html" title="yql">yql</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="classList" class="module">
+                        <h4>Classes</h4>
+                        <ul class="content">
+                                <li class=""><a href="yql.html" title="yql">yql</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="fileList" class="module">
+                        <h4>Files</h4>
+                        <ul class="content">        
+                                <li class="selected"><a href="yql.js.html" title="yql.js">yql.js</a></li>
+                        </ul>
+                    </div>
+
+
+
+
+
+            </div>
+		</div>
+	</div>
+	<div id="ft">
+        <hr />
+        Copyright &copy; 2009 Yahoo! Inc. All rights reserved.
+	</div>
+</div>
+<script type="text/javascript">
+    ALL_YUI_PROPS = [{"url": "yql.html#event_error", "access": "", "host": "yql", "type": "event", "name": "error"}, {"url": "yql.html#event_query", "access": "", "host": "yql", "type": "event", "name": "query"}];
+</script>
+</body>
+</html>
