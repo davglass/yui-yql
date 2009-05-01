@@ -52,8 +52,9 @@
                 <li><a href="http://github.com/davglass/yui-yql/raw/master/yql-min.js">Minned Source File</a></li>
             </ul>
             <textarea name="code" class="HTML">
-                <script type="text/javascript" src="yql.js"></script>
-            </textarea>
+<script src="http://github.com/yui/yui3/raw/master/build/yui/yui-min.js" type="text/javascript"></script>
+<script type="text/javascript" src="http://github.com/davglass/yui-yql/raw/master/yql-min.js"></script>
+</textarea>
             <textarea name="code" class="JScript">
             YUI().use('yql', function(Y) {
                 //Using events
@@ -71,7 +72,7 @@
                     r.error; //The error message
                 });
             });
-            </textarea>
+</textarea>
             <h2>GitHub Query</h2>
             <textarea name="code" class="JScript">
     var res = Y.get('#res');
@@ -123,6 +124,64 @@
             }
         });
     });
+</textarea>
+            <h2>Full Source of Examples</h2>
+            <textarea name="code" class="JScript">
+YUI({
+    base: 'http://github.com/yui/yui3/raw/master/build/',
+    combo: false,
+    logExclude: {
+        'YUI': true,
+        Event: true,
+        Base: true,
+        Attribute: true,
+        augment: true
+    }    
+}).use('node', 'yql', function(Y) {
+    var res = Y.get('#res');
+
+    var q1 = new Y.yql('select * from github.user.info where (id = "davglass")');
+    q1.on('query', function(r) {
+        var el = Y.Node.create('<div class="mod"></div>'),
+            user = r.results.user;
+        el.set('innerHTML', '<h2>Github (' + user.name + ')</h2>' + 'URL: <a href="http://github.com/' + user.login + '">http://github.com/' + user.login + '</a><br>Public Repos: (' + user['public-repo-count'].content + ')<br>Followers: (' + user['followers-count'].content + ')<br>Following: (' + user['following-count'].content + ')');
+        res.appendChild(el);
+    });
+    
+
+    var q2 = new Y.yql('select * from weather.forecast where location=90210');
+    q2.on('query', function(r) {
+        var el = Y.Node.create('<div class="mod"></div>');
+        el.set('innerHTML', '<h2>Weather for 90210</h2>' + r.results.channel.item.description);
+        res.appendChild(el);
+        
+    });
+
+    var q3 = new Y.yql('select * from twitter.user.timeline where (id = "davglass")', function(r) {
+        var data = r.query.results.entry;
+        var h2 = Y.Node.create('<h2><img src="' + data[0].link[1].href + '"> Twitter: ' + data[0].author.name + '</h2>');
+        var ul = Y.Node.create('<ul class="twitter"></ul>');
+        Y.each(data, function(v) {
+            var title = v.title;
+            var len = title.indexOf(':');
+            title = title.substring(len + 2);
+		    title = title.replace(/[@]+[A-Za-z0-9-_]+/g, function(f, n, s) {
+                return '<a href="http://twitter.com/' + f.replace('@', '') + '">' + f + '</a>';
+            });            
+            var li = Y.Node.create('<li>' + title + '<span></span></li>');
+            ul.appendChild(li);
+        });
+        var wrap = Y.Node.create('<div id="twitter" class="mod"></div>');
+        wrap.appendChild(h2);
+        wrap.appendChild(ul);
+        res.appendChild(wrap);
+        ul.queryAll('li').each(function(v, k) {
+            if (!(k % 2)) {
+                v.addClass('odd');
+            }
+        });
+    });
+});
             </textarea>
 	        </div>
         </div>
@@ -138,7 +197,6 @@
 <script type="text/javascript">
 YUI({
     base: 'http://github.com/yui/yui3/raw/master/build/',
-    //base: '../3.x/build/',
     combo: false,
     logExclude: {
         'YUI': true,
