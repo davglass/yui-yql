@@ -3,7 +3,20 @@ YUI.add('yql', function(Y) {
     if (!YUI.yql) {
         YUI.yql = {};
     }
-
+    /**
+     * This class adds a sugar class to allow access to YQL (http://developer.yahoo.com/yql/).
+     * @module yql
+     */     
+    /**
+     * This class adds a sugar class to allow access to YQL (http://developer.yahoo.com/yql/).
+     * @class yql
+     * @extends Event.Target
+     * @constructor
+     * @namespace yql
+     * @param {String} sql The SQL statement to execute
+     * @param {Function} callback The callback to execute after the query (optional).
+     * @param {Object} params An object literal of extra parameters to pass along (optional).
+     */
     var BASE_URL = 'http:/'+'/query.yahooapis.com/v1/public/yql?',
     yql = function (sql, callback, params) {
         yql.superclass.constructor.apply(this);
@@ -11,6 +24,13 @@ YUI.add('yql', function(Y) {
     };
 
     Y.extend(yql, Y.Event.Target, {
+        /**
+        * @private
+        * @method _receiver
+        * @description The global callback that get's called from Get.
+        * @param {Object} q The JSON object from YQL.
+        * @return Self
+        */
         _receiver: function(q) {
             if (q.query) {
                 this.fire('query', q.query);
@@ -21,9 +41,19 @@ YUI.add('yql', function(Y) {
             if (this._cb) {
                 this._cb(q);
             }
+            return this;
         },
+        /**
+        * @private
+        * @method _query
+        * @description Builds the query and fire the Get call.
+        * @param {String} sql The SQL statement to execute
+        * @param {Function} callback The callback to execute after the query (optional).
+        * @param {Object} params An object literal of extra parameters to pass along (optional).
+        * @return Self
+        */
         _query: function(sql, callback, params) {
-            var st = Y.stamp({}), qs = '', i, url;
+            var st = Y.stamp({}), qs = '', url;
             //Must replace the dashes with underscrores
             st = st.replace(/-/g, '_');
             
@@ -50,6 +80,17 @@ YUI.add('yql', function(Y) {
             return this;
         }
     });
+    /**
+    * @event query
+    * @description Fires when the Query returns.
+    * @type {Event.Custom}
+    */
+
+    /**
+    * @event error
+    * @description Fires when an error occurs.
+    * @type {Event.Custom}
+    */
 
     Y.yql = yql;
 
