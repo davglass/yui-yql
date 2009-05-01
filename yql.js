@@ -12,7 +12,6 @@ YUI.add('yql', function(Y) {
      * @class yql
      * @extends Event.Target
      * @constructor
-     * @namespace yql
      * @param {String} sql The SQL statement to execute
      * @param {Function} callback The callback to execute after the query (optional).
      * @param {Object} params An object literal of extra parameters to pass along (optional).
