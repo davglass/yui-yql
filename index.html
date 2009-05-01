@@ -25,6 +25,10 @@
             background-color: #ccc;
             border-color: #ddd;
         }
+        ul.listing li {
+            list-style-type: square;
+            margin-left: 4em;        
+        }
 	</style>
 </head>
 <body class="yui-skin-sam">
@@ -41,12 +45,12 @@
             <p>This module adds a <code>YQL</code> class to allow you to use <a href="http://developer.yahoo.com/yql/">YQL</a> from YUI3.</p>
             <p>It already loads the <code>alltables.env</code> file from <a href="http://datatables.org">datatables.org</a>, so all the external user created Open Tables are available to query against.</p>
             <p><em>Note: this is using the latest YUI 3 sources from GitHub (Not PR2).</em></p>
-            <p><ul>
+            <ul class="listing">
                 <li><a href="./docs/">API Docs are available here.</a></li>
                 <li><a href="http://github.com/davglass/yui-yql/">Full Source</a></li>
                 <li><a href="http://github.com/davglass/yui-yql/raw/master/yql.js">Full Source File</a></li>
                 <li><a href="http://github.com/davglass/yui-yql/raw/master/yql-min.js">Minned Source File</a></li>
-            </ul></p>
+            </ul>
             <textarea name="code" class="HTML">
                 <script type="text/javascript" src="yql.js"></script>
             </textarea>
@@ -113,7 +117,11 @@
         wrap.appendChild(h2);
         wrap.appendChild(ul);
         res.appendChild(wrap);
-        ul.queryAll('li:nth-of-type(odd)').addClass('odd');
+        ul.queryAll('li').each(function(v, k) {
+            if (!(k % 2)) {
+                v.addClass('odd');
+            }
+        });
     });
             </textarea>
 	        </div>
@@ -139,7 +147,7 @@ YUI({
         Attribute: true,
         augment: true
     }    
-}).use('node', 'yql', 'selector-css3', function(Y) {
+}).use('node', 'yql', function(Y) {
     var res = Y.get('#res');
 
     var q1 = new Y.yql('select * from github.user.info where (id = "davglass")');
@@ -177,7 +185,11 @@ YUI({
         wrap.appendChild(h2);
         wrap.appendChild(ul);
         res.appendChild(wrap);
-        ul.queryAll('li:nth-of-type(odd)').addClass('odd');
+        ul.queryAll('li').each(function(v, k) {
+            if (!(k % 2)) {
+                v.addClass('odd');
+            }
+        });
     });
 });
 
