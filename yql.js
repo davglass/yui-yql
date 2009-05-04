@@ -25,10 +25,21 @@ YUI.add('yql', function(Y) {
     Y.extend(yql, Y.Event.Target, {
         /**
         * @private
+        * @property _cb
+        * @description The callback method
+        */ 
+        _cb: null,
+        /**
+        * @private
+        * @property _stamp
+        * @description The method name on the Global YUI object we use as the callback.
+        */ 
+        _stamp: null,
+        /**
+        * @private
         * @method _receiver
         * @description The global callback that get's called from Get.
         * @param {Object} q The JSON object from YQL.
-        * @return Self
         */
         _receiver: function(q) {
             if (q.query) {
@@ -40,7 +51,7 @@ YUI.add('yql', function(Y) {
             if (this._cb) {
                 this._cb(q);
             }
-            return this;
+            delete YUI.yql[st];
         },
         /**
         * @private
@@ -55,6 +66,8 @@ YUI.add('yql', function(Y) {
             var st = Y.stamp({}), qs = '', url;
             //Must replace the dashes with underscrores
             st = st.replace(/-/g, '_');
+
+            this._stamp = st;
             
             this._cb = callback;
 
