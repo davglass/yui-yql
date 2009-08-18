@@ -1,5 +1,6 @@
 h1. YQL sugar for YUI3
 
+<pre class="console">
     YUI().use('yql', function(Y) {
         //Using events
         var q1 = new Y.yql('select * from github.user.info where (id = "davglass")');
@@ -16,4 +17,4 @@ h1. YQL sugar for YUI3
             r.error; //The error message
         });
     });
-
+</pre>
