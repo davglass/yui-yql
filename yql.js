@@ -22,7 +22,7 @@ YUI.add('yql', function(Y) {
         this._query(sql, callback, params);
     };
 
-    Y.extend(yql, Y.Event.Target, {
+    Y.extend(yql, Y.EventTarget, {
         /**
         * @private
         * @property _cb
