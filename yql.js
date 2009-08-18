@@ -1,3 +1,4 @@
+/*jslint predef: YUI */
 YUI.add('yql', function(Y) {
     //Global storage for the callbacks
     if (!YUI.yql) {
@@ -51,7 +52,7 @@ YUI.add('yql', function(Y) {
             if (this._cb) {
                 this._cb(q);
             }
-            delete YUI.yql[st];
+            delete YUI.yql[this._stamp];
         },
         /**
         * @private
