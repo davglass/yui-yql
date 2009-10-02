@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title>YUI-YQL test</title>
+</head>
+
+<body class="yui-skin-sam">
+	
+	<script src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js" type="text/javascript"></script>
+	<script src="yql.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		
+		YUI().use('yql', 'console', 'dump', function(Y){
+			
+			var TIMEOUT = 200, // this is unreasonably low, but forces the queries into timeout mode.
+				console, q1, q2;
+			
+			console = new Y.Console({
+				height : 600,
+				width : 600
+			}).render();
+			
+			console.log('console loaded');
+			
+			//Using events
+			q1 = new Y.yql('select * from github.user.info where (id = "davglass")', null, { timeout:TIMEOUT });
+			q1.on('query', function(r) {
+				console.log('RESULTS: '+Y.dump(r.results), 'info', 'q1');
+			});
+			q1.on('error', function(r) {
+				console.log('ERROR: '+Y.dump(r), 'error', 'q1');
+			});
+			q1.on('timeout', function(r) {
+				console.log('TIMEOUT: '+Y.dump(r), 'warn', 'q1');
+			});
+			
+			//Or the callback approach
+			q2 = new Y.yql('select * from github.user.info where (id = "davglass")', function(r) {
+			
+				if (r.query) {
+					console.log('RESULTS: '+Y.dump(r.query.results), 'info', 'q2');
+				} else if (r.error) {
+					console.log('ERROR: '+Y.dump(r.error), 'error', 'q2');
+				} else {
+					console.log('TIMEOUT: '+Y.dump(r), 'warn', 'q2');
+				}
+				
+			}, { timeout:TIMEOUT });
+			
+		});
+		
+	</script>
+	
+</body>
+
+</html>
