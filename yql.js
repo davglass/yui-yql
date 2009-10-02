@@ -18,9 +18,9 @@ YUI.add('yql', function(Y) {
      * @param {Object} params An object literal of extra parameters to pass along (optional).
      */
     var BASE_URL = 'http:/'+'/query.yahooapis.com/v1/public/yql?',
-    yql = function (sql, callback, params) {
+    yql = function (sql, callback, options, params) {
         yql.superclass.constructor.apply(this);
-        this._query(sql, callback, params);
+        this._query(sql, callback, options, params);
     };
 
     Y.extend(yql, Y.EventTarget, {
@@ -63,7 +63,7 @@ YUI.add('yql', function(Y) {
         * @param {Object} params An object literal of extra parameters to pass along (optional).
         * @return Self
         */
-        _query: function(sql, callback, params) {
+        _query: function(sql, callback, options, params) {
             var st = Y.stamp({}), qs = '', url;
             //Must replace the dashes with underscrores
             st = st.replace(/-/g, '_');
@@ -87,9 +87,22 @@ YUI.add('yql', function(Y) {
             Y.each(params, function(v, k) {
                 qs += k + '=' + encodeURIComponent(v) + '&';
             });
+            
+            if (!options) {
+                options = {};
+            }
+            options.autopurge = true;
+            options.context = this;
+            options.onTimeout = function(o){
+                this.fire('timeout', o);
+                if (this._cb) {
+                    this._cb(o);
+                    this._cb = null;
+                }
+            };
 
             url = BASE_URL + qs;
-            Y.Get.script(url, { autopurge: true });
+            Y.Get.script(url, options);
             return this;
         }
     });
@@ -104,7 +117,13 @@ YUI.add('yql', function(Y) {
     * @description Fires when an error occurs.
     * @type {Event.Custom}
     */
-
-    Y.yql = yql;
-
+    
+    /**
+     * @event timeout
+     * @description Fires when the request has timed-out.
+     * @type {Event.Custom}
+     */
+	
+	Y.yql = yql;
+	
 }, '1.0', { requires: ['get', 'event-custom'], skinnable:false});
