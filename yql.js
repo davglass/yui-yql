@@ -16,11 +16,12 @@ YUI.add('yql', function(Y) {
      * @param {String} sql The SQL statement to execute
      * @param {Function} callback The callback to execute after the query (optional).
      * @param {Object} params An object literal of extra parameters to pass along (optional).
+     * @param {Object} opts An object literal of extra options to pass along to the Get Utility (optional).
      */
     var BASE_URL = 'http:/'+'/query.yahooapis.com/v1/public/yql?',
-    yql = function (sql, callback, options, params) {
+    yql = function (sql, callback, params, opts) {
         yql.superclass.constructor.apply(this);
-        this._query(sql, callback, options, params);
+        this._query(sql, callback, params, opts);
     };
 
     Y.extend(yql, Y.EventTarget, {
@@ -61,9 +62,10 @@ YUI.add('yql', function(Y) {
         * @param {String} sql The SQL statement to execute
         * @param {Function} callback The callback to execute after the query (optional).
         * @param {Object} params An object literal of extra parameters to pass along (optional).
+        * @param {Object} opts An object literal of extra options to pass along to the Get Utility (optional).
         * @return Self
         */
-        _query: function(sql, callback, options, params) {
+        _query: function(sql, callback, params, opts) {
             var st = Y.stamp({}), qs = '', url;
             //Must replace the dashes with underscrores
             st = st.replace(/-/g, '_');
@@ -88,12 +90,12 @@ YUI.add('yql', function(Y) {
                 qs += k + '=' + encodeURIComponent(v) + '&';
             });
             
-            if (!options) {
-                options = {};
+            if (!opts) {
+                opts = {};
             }
-            options.autopurge = true;
-            options.context = this;
-            options.onTimeout = function(o){
+            opts.autopurge = true;
+            opts.context = this;
+            opts.onTimeout = function(o){
                 this.fire('timeout', o);
                 if (this._cb) {
                     this._cb(o);
@@ -102,7 +104,7 @@ YUI.add('yql', function(Y) {
             };
 
             url = BASE_URL + qs;
-            Y.Get.script(url, options);
+            Y.Get.script(url, opts);
             return this;
         }
     });

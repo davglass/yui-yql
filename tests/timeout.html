@@ -9,7 +9,7 @@
 <body class="yui-skin-sam">
 	
 	<script src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js" type="text/javascript"></script>
-	<script src="yql.js" type="text/javascript"></script>
+	<script src="../yql-min.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		
 		YUI().use('yql', 'console', 'dump', function(Y){
@@ -25,7 +25,7 @@
 			console.log('console loaded');
 			
 			//Using events
-			q1 = new Y.yql('select * from github.user.info where (id = "davglass")', null, { timeout:TIMEOUT });
+			q1 = new Y.yql('select * from github.user.info where (id = "davglass")', null, {}, { timeout:TIMEOUT });
 			q1.on('query', function(r) {
 				console.log('RESULTS: '+Y.dump(r.results), 'info', 'q1');
 			});
@@ -47,7 +47,7 @@
 					console.log('TIMEOUT: '+Y.dump(r), 'warn', 'q2');
 				}
 				
-			}, { timeout:TIMEOUT });
+			}, {}, { timeout:TIMEOUT });
 			
 		});
 		

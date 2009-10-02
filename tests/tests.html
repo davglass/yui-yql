@@ -1,0 +1,263 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>YUI: YUI3 YQL Module</title>
+    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.6.0/build/reset-fonts-grids/reset-fonts-grids.css"> 
+    <link rel="stylesheet" href="http://blog.davglass.com/files/yui/css/davglass.css" type="text/css">
+    <link rel="stylesheet" type="text/css" href="http://developer.yahoo.com/yui/assets/dpSyntaxHighlighter.css">    
+    <style type="text/css" media="screen">
+        p, h2 {
+            margin: 1em;
+        }
+
+        .mod {
+            border: 1px solid black;
+            padding: 10px;
+            width: 240px;
+            margin: .5em;
+        }
+        .mod .twitter li {
+            border: 1px solid #ccc;
+            margin-bottom: 3px;
+            padding: 5px;
+        }
+        .mod .twitter li.odd {
+            background-color: #ccc;
+            border-color: #ddd;
+        }
+        ul.listing li {
+            list-style-type: square;
+            margin-left: 4em;        
+        }
+	</style>
+</head>
+<body class="yui-skin-sam">
+<div id="davdoc" class="yui-t7">
+    <div id="hd"><h1 id="header"><a href="http://blog.davglass.com/">YUI: YUI3 YQL Module</a></h1></div>
+    <div id="bd">
+	    <div class="yui-gd">
+            <div class="yui-u first">
+                <h2>Examples</h2>
+                <div id="res"></div>
+	        </div>
+            <div class="yui-u">
+            <p><strong>The example may load a little slow (I'm pulling the YUI files from GitHub), so give it a sec.</strong></p>
+            <p>This module adds a <code>YQL</code> class to allow you to use <a href="http://developer.yahoo.com/yql/">YQL</a> from YUI3.</p>
+            <p>It already loads the <code>alltables.env</code> file from <a href="http://datatables.org">datatables.org</a>, so all the external user created Open Tables are available to query against.</p>
+            <p><em>Note: this is using the latest YUI 3 sources from GitHub (Not PR2).</em></p>
+            <ul class="listing">
+                <li><a href="./docs/">API Docs are available here.</a></li>
+                <li><a href="http://github.com/davglass/yui-yql/">Full Source</a></li>
+                <li><a href="http://github.com/davglass/yui-yql/raw/master/yql.js">Full Source File</a></li>
+                <li><a href="http://github.com/davglass/yui-yql/raw/master/yql-min.js">Minned Source File</a></li>
+            </ul>
+            <textarea name="code" class="HTML">
+<script type="text/javascript" src="http://yui.yahooapis.com/combo?3.0.0/build/yui/yui-min.js"></script>
+<script type="text/javascript" src="yql-min.js"></script>
+</textarea>
+            <textarea name="code" class="JScript">
+            YUI().use('yql', function(Y) {
+                //Using events
+                var q1 = new Y.yql('select * from github.user.info where (id = "davglass")');
+                q1.on('query', function(r) {
+                    //Do something here.
+                });
+                q1.on('error', function(r) {
+                    //Do something here.
+                });
+                //Or the callback approach
+                new Y.yql('select * from github.user.info where (id = "davglass")', function(r) {
+                    //Do something here.
+                    r.query; //The result
+                    r.error; //The error message
+                });
+            });
+</textarea>
+            <h2>GitHub Query</h2>
+            <textarea name="code" class="JScript">
+    var res = Y.get('#res');
+    
+    var q1 = new Y.yql('select * from github.user.info where (id = "davglass")');
+    q1.on('query', function(r) {
+        var el = Y.Node.create('<div class="mod"></div>'),
+            user = r.results.user;
+        el.set('innerHTML', '<h2>Github (' + user.name + ')</h2>' + 
+            'URL: <a href="http://github.com/' + user.login + '">http://github.com/' + user.login +
+            '</a><br>Public Repos: (' + user['public-repo-count'].content + ')<br>Followers: ('
+            + user['followers-count'].content + ')<br>Following: (' + user['following-count'].content + ')');
+        res.appendChild(el);
+    });
+</textarea>
+            <h2>Weather Query</h2>
+            <textarea name="code" class="JScript">
+    var q2 = new Y.yql('select * from weather.forecast where location=90210');
+    q2.on('query', function(r) {
+        var el = Y.Node.create('<div class="mod"></div>');
+        el.set('innerHTML', '<h2>Weather for 90210</h2>' +
+            r.results.channel.item.description);
+        res.appendChild(el);
+        
+    });</textarea>
+            <h2>Twitter Query</h2>
+            <textarea name="code" class="JScript">
+    var q3 = new Y.yql('select * from twitter.user.timeline where (id = "davglass")', function(r) {
+        var data = r.query.results.entry;
+        var h2 = Y.Node.create('<h2><img src="' + data[0].link[1].href + '"> Twitter: ' + data[0].author.name + '</h2>');
+        var ul = Y.Node.create('<ul class="twitter"></ul>');
+        Y.each(data, function(v) {
+            var title = v.title;
+            var len = title.indexOf(':');
+            title = title.substring(len + 2);
+		    title = title.replace(/[@]+[A-Za-z0-9-_]+/g, function(f, n, s) {
+                return '<a href="http://twitter.com/' + f.replace('@', '') + '">' + f + '</a>';
+            });            
+            var li = Y.Node.create('<li>' + title + '<span></span></li>');
+            ul.appendChild(li);
+        });
+        var wrap = Y.Node.create('<div id="twitter" class="mod"></div>');
+        wrap.appendChild(h2);
+        wrap.appendChild(ul);
+        res.appendChild(wrap);
+        ul.queryAll('li').each(function(v, k) {
+            if (!(k % 2)) {
+                v.addClass('odd');
+            }
+        });
+    });
+</textarea>
+            <h2>Full Source of Examples</h2>
+            <textarea name="code" class="JScript">
+YUI({
+    logExclude: {
+        'YUI': true,
+        Event: true,
+        Base: true,
+        Attribute: true,
+        augment: true
+    }    
+}).use('node', 'yql', function(Y) {
+    var res = Y.get('#res');
+
+    var q1 = new Y.yql('select * from github.user.info where (id = "davglass")');
+    q1.on('query', function(r) {
+        if (r.results) {
+            var el = Y.Node.create('<div class="mod"></div>'),
+                user = r.results.user;
+            el.set('innerHTML', '<h2>Github (' + user.name + ')</h2>' + 'URL: <a href="http://github.com/' + user.login + '">http://github.com/' + user.login + '</a><br>Public Repos: (' + user['public-repo-count'].content + ')<br>Followers: (' + user['followers-count'].content + ')<br>Following: (' + user['following-count'].content + ')');
+            res.appendChild(el);
+        }
+    });
+    
+
+    var q2 = new Y.yql('select * from weather.forecast where location=90210');
+    q2.on('query', function(r) {
+        if (r.results) {
+            var el = Y.Node.create('<div class="mod"></div>');
+            el.set('innerHTML', '<h2>Weather for 90210</h2>' + r.results.channel.item.description);
+            res.appendChild(el);
+        }
+    });
+
+    var q3 = new Y.yql('select * from twitter.user.timeline where (id = "davglass")', function(r) {
+        if (r.query.results) {
+            var data = r.query.results.entry;
+            var h2 = Y.Node.create('<h2><img src="' + data[0].link[1].href + '"> Twitter: ' + data[0].author.name + '</h2>');
+            var ul = Y.Node.create('<ul class="twitter"></ul>');
+            Y.each(data, function(v) {
+                var title = v.title;
+                var len = title.indexOf(':');
+                title = title.substring(len + 2);
+                title = title.replace(/[@]+[A-Za-z0-9-_]+/g, function(f, n, s) {
+                    return '<a href="http://twitter.com/' + f.replace('@', '') + '">' + f + '</a>';
+                });            
+                var li = Y.Node.create('<li>' + title + '<span></span></li>');
+                ul.appendChild(li);
+            });
+            var wrap = Y.Node.create('<div id="twitter" class="mod"></div>');
+            wrap.appendChild(h2);
+            wrap.appendChild(ul);
+            res.appendChild(wrap);
+            ul.queryAll('li').each(function(v, k) {
+                if (!(k % 2)) {
+                    v.addClass('odd');
+                }
+            });
+        }
+    });
+});
+            </textarea>
+	        </div>
+        </div>
+    </div>
+    <div id="ft">&nbsp;</div>
+</div>
+<script src="http://developer.yahoo.com/yui/assets/dpSyntaxHighlighter.js"></script>
+<script type="text/javascript" src="http://yui.yahooapis.com/combo?3.0.0b1/build/yui/yui-min.js"></script>
+<script type="text/javascript" src="http://github.com/davglass/yui-yql/raw/master/yql-min.js"></script>
+
+
+
+<script type="text/javascript">
+YUI({
+    logExclude: {
+        'YUI': true,
+        Event: true,
+        Base: true,
+        Attribute: true,
+        augment: true
+    }    
+}).use('node', 'yql', function(Y) {
+    var res = Y.get('#res');
+
+    var q1 = new Y.yql('select * from github.user.info where (id = "davglass")');
+    q1.on('query', function(r) {
+        if (r.results) {
+            var el = Y.Node.create('<div class="mod"></div>'),
+                user = r.results.user;
+            el.set('innerHTML', '<h2>Github (' + user.name + ')</h2>' + 'URL: <a href="http://github.com/' + user.login + '">http://github.com/' + user.login + '</a><br>Public Repos: (' + user['public-repo-count'].content + ')<br>Followers: (' + user['followers-count'].content + ')<br>Following: (' + user['following-count'].content + ')');
+            res.appendChild(el);
+        }
+    });
+    
+
+    var q2 = new Y.yql('select * from weather.forecast where location=90210');
+    q2.on('query', function(r) {
+        if (r.results) {
+            var el = Y.Node.create('<div class="mod"></div>');
+            el.set('innerHTML', '<h2>Weather for 90210</h2>' + r.results.channel.item.description);
+            res.appendChild(el);
+        }
+    });
+
+    var q3 = new Y.yql('select * from twitter.user.timeline where (id = "davglass")', function(r) {
+        if (r.query.results) {
+            var data = r.query.results.entry;
+            var h2 = Y.Node.create('<h2><img src="' + data[0].link[1].href + '"> Twitter: ' + data[0].author.name + '</h2>');
+            var ul = Y.Node.create('<ul class="twitter"></ul>');
+            Y.each(data, function(v) {
+                var title = v.title;
+                var len = title.indexOf(':');
+                title = title.substring(len + 2);
+                title = title.replace(/[@]+[A-Za-z0-9-_]+/g, function(f, n, s) {
+                    return '<a href="http://twitter.com/' + f.replace('@', '') + '">' + f + '</a>';
+                });            
+                var li = Y.Node.create('<li>' + title + '<span></span></li>');
+                ul.appendChild(li);
+            });
+            var wrap = Y.Node.create('<div id="twitter" class="mod"></div>');
+            wrap.appendChild(h2);
+            wrap.appendChild(ul);
+            res.appendChild(wrap);
+            ul.queryAll('li').each(function(v, k) {
+                if (!(k % 2)) {
+                    v.addClass('odd');
+                }
+            });
+        }
+    });
+});
+
+dp.SyntaxHighlighter.HighlightAll('code');
+</script>
+</body>
+</html>
