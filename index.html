@@ -52,7 +52,7 @@
                 <li><a href="http://github.com/davglass/yui-yql/raw/master/yql-min.js">Minned Source File</a></li>
             </ul>
             <textarea name="code" class="HTML">
-<script type="text/javascript" src="http://yui.yahooapis.com/combo?3.0.0b1/build/yui/yui-min.js"></script>
+<script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
 <script type="text/javascript" src="http://github.com/davglass/yui-yql/raw/master/yql-min.js"></script>
 </textarea>
             <textarea name="code" class="JScript">
@@ -75,7 +75,7 @@
 </textarea>
             <h2>GitHub Query</h2>
             <textarea name="code" class="JScript">
-    var res = Y.get('#res');
+    var res = Y.one('#res');
     
     var q1 = new Y.yql('select * from github.user.info where (id = "davglass")');
     q1.on('query', function(r) {
@@ -118,7 +118,7 @@
         wrap.appendChild(h2);
         wrap.appendChild(ul);
         res.appendChild(wrap);
-        ul.queryAll('li').each(function(v, k) {
+        ul.all('li').each(function(v, k) {
             if (!(k % 2)) {
                 v.addClass('odd');
             }
@@ -136,7 +136,7 @@ YUI({
         augment: true
     }    
 }).use('node', 'yql', function(Y) {
-    var res = Y.get('#res');
+    var res = Y.one('#res');
 
     var q1 = new Y.yql('select * from github.user.info where (id = "davglass")');
     q1.on('query', function(r) {
@@ -177,7 +177,7 @@ YUI({
             wrap.appendChild(h2);
             wrap.appendChild(ul);
             res.appendChild(wrap);
-            ul.queryAll('li').each(function(v, k) {
+            ul.all('li').each(function(v, k) {
                 if (!(k % 2)) {
                     v.addClass('odd');
                 }
@@ -192,22 +192,14 @@ YUI({
     <div id="ft">&nbsp;</div>
 </div>
 <script src="http://developer.yahoo.com/yui/assets/dpSyntaxHighlighter.js"></script>
-<script type="text/javascript" src="http://yui.yahooapis.com/combo?3.0.0b1/build/yui/yui-min.js"></script>
+<script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
 <script type="text/javascript" src="http://github.com/davglass/yui-yql/raw/master/yql-min.js"></script>
 
 
 
 <script type="text/javascript">
-YUI({
-    logExclude: {
-        'YUI': true,
-        Event: true,
-        Base: true,
-        Attribute: true,
-        augment: true
-    }    
-}).use('node', 'yql', function(Y) {
-    var res = Y.get('#res');
+YUI().use('node', 'yql', function(Y) {
+    var res = Y.one('#res');
 
     var q1 = new Y.yql('select * from github.user.info where (id = "davglass")');
     q1.on('query', function(r) {
@@ -248,7 +240,7 @@ YUI({
             wrap.appendChild(h2);
             wrap.appendChild(ul);
             res.appendChild(wrap);
-            ul.queryAll('li').each(function(v, k) {
+            ul.all('li').each(function(v, k) {
                 if (!(k % 2)) {
                     v.addClass('odd');
                 }

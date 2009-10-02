@@ -1,1 +1,1 @@
-[{"url": "yql.html#event_error", "access": "", "host": "yql", "type": "event", "name": "error"}, {"url": "yql.html#event_query", "access": "", "host": "yql", "type": "event", "name": "query"}]
+[{"url": "yql.html#event_error", "access": "", "host": "yql", "type": "event", "name": "error"}, {"url": "yql.html#event_query", "access": "", "host": "yql", "type": "event", "name": "query"}, {"url": "yql.html#event_timeout", "access": "", "host": "yql", "type": "event", "name": "timeout"}]
